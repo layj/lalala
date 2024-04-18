@@ -1,0 +1,30 @@
+import logging
+
+logging.basicConfig(level=logging.INFO, filename='history.log', filemode='w',
+format='%(asctime)s - %(message)s')
+
+class Logger:
+    def __init__(self, max_count=30): #로거의 저장 한계 설정
+        self.dialogues = [] #빈 리스트 설정(저장 용도)
+        self.max_count = max_count
+        self.logger = logging.getLogger('History') #로거를 'History'라는 이름으로 저장
+
+    def add_dialogue(self, question, answer): #dialogue(빈리스트)에 저장
+        if len(self.dialogues) >= self.max_count:#맥스 카운트를 넘을경우 pop을 통해 오래된 거 삭제
+            self.dialogues.pop(0)  # 가장 오래된 대화를 제거
+        self.dialogues.append((question, answer))#빈 리스트에 QA를 추가
+        self.log_dialogue(question, answer) #log_dialogue를 통해서 str 저장 형식 설정
+
+    def log_dialogue(self, question, answer): #저장 형식 설정
+        self.logger.info(f'질문: {question} - 답변: {answer}')
+
+    def get_all_dialogues(self):
+        return self.dialogues #dialogue 리스트 반환
+
+# class History_Get: #다른 파일로 저장해서 활용/ 한꺼번에 보기 위해 해당 파일에 첨부
+
+#     History = Logger() #Logger class를 활용하기 쉽게하기 위한 변수 지정
+
+#     def process_new_history(History, question, answer):
+#         History.add_dialogue(question, answer)
+#         return History.get_all_dialogues()  # 그냥 Logger class의 get_all_dialogues() 사용하면 됨
